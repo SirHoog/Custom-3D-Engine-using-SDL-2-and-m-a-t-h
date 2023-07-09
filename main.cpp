@@ -245,7 +245,7 @@ int APIENTRY WinMain(HINSTANCE _instance, HINSTANCE _previnst, PSTR _cmdline, in
 
     bool running = true;
 
-    readOBJ("TestObject2.obj");
+    readOBJ("C:\\Users\\defga\\OneDrive\\Documents\\3D_Engine_Project\\TestObject2.obj");
     
     verts = matrixMult(verts, AngleVectorToRotMatrix(objRot));
     vertNorms = matrixMult(vertNorms, AngleVectorToRotMatrix(objRot));
