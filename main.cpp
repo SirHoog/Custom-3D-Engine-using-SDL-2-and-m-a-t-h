@@ -296,7 +296,7 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
         SDL_SetRenderDrawColor(renderer, 255, 100, 100, 255);
         SDL_RenderClear(renderer);
         
-        calculateFocalLength();
+        calcFocalLength();
 
         for (int faceI = 0; faceI < faces.size(); faceI++)
         {
