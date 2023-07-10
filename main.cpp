@@ -200,7 +200,14 @@ void calculateFocalLength(float& focalLength)
 SDL_FPoint projVert(std::array<float, 3> vert)
 {
     // Apply the camera transformation to the vertex
-    std::array<float, 3> transformedVert = matrixMult({vert}, camTransform)[0];
+    std::array<float, 3> transformedVert = matrixMult(
+        {
+            {0, 0, vert[2]},
+            {0, vert[1], 0},
+            {vert[0], 0, 0}
+        },
+        camTransform
+    )[0];
 
     // Perform projection calculations
     SDL_FPoint proj =
