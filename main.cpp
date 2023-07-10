@@ -207,6 +207,8 @@ SDL_FPoint projVert(std::array<float, 3> vert)
         camTransform
     )[0];
 
+    std::cout << transformedVert[2] == 0 << std::endl;
+
     // Perform projection calculations
     SDL_FPoint proj =
     {
