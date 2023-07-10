@@ -200,9 +200,9 @@ SDL_FPoint projVert(std::array<float, 3> vert)
     // Apply the camera transformation to the vertex
     std::array<float, 3> transformedVert = matrixMult(
         {
-            {1, 1, vert[2]},
-            {1, vert[1], 1},
-            {vert[0], 1, 1}
+            {vert[0], vert[1], vert[2]},
+            {1, 1, 1},
+            {1, 1, 1}
         },
         camTransform
     )[0];
