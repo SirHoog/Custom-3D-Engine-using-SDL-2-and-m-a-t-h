@@ -200,14 +200,14 @@ SDL_FPoint projVert(std::array<float, 3> vert)
     // Apply the camera transformation to the vertex
     std::array<float, 3> transformedVert = matrixMult(
         {
-            {0, 0, vert[2]},
-            {0, vert[1], 0},
-            {vert[0], 0, 0}
+            {1, 1, vert[2]},
+            {1, vert[1], 1},
+            {vert[0], 1, 1}
         },
         camTransform
     )[0];
 
-    std::cout << (transformedVert[2] == 0) << std::endl;
+    std::cout << std::round(vert[0]) << ' ' << std::round(vert[1]) << ' ' << std::round(vert[2]) << " : " << transformedVert[0] << ' ' << transformedVert[1] << ' ' << transformedVert[2] << std::endl;
 
     // Perform projection calculations
     SDL_FPoint proj =
@@ -216,12 +216,12 @@ SDL_FPoint projVert(std::array<float, 3> vert)
         focalLength * transformedVert[1] / transformedVert[2]   // fl * y / z
     };
 
-    // // Convert to SDL2 coordinates
-    // proj =
-    // {
-    //     (proj.x + screenWidth / 2) / screenWidth,
-    //     1 - (proj.y + screenHeight / 2) / screenHeight
-    // };
+    // Convert to SDL2 coordinates
+    proj =
+    {
+        (proj.x + screenWidth / 2) / screenWidth,
+        1 - (proj.y + screenHeight / 2) / screenHeight
+    };
 
     return proj;
 };
