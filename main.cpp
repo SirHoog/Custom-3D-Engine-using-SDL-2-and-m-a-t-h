@@ -93,7 +93,12 @@ std::vector<std::array<float, 3>> AngleVectorToRotMatrix(std::array<float, 3> ve
 // matrix2, matrix1
 std::vector<std::array<float, 3>> matrixMult(std::vector<std::array<float, 3>> m2, std::vector<std::array<float, 3>> m1)
 {
-    std::vector<std::array<float, 3>> composition = {};
+    std::vector<std::array<float, 3>> composition =
+    {
+        {0, 0, 0},
+        {0, 0, 0},
+        {0, 0, 0}
+    };
 
     for (int i = 0; i < m1.size(); i++)
     {
@@ -101,7 +106,7 @@ std::vector<std::array<float, 3>> matrixMult(std::vector<std::array<float, 3>> m
         {
             for (int k = 0; k < m2.size(); k++)
             {
-                composition[i][j] += m1[i][k] * m2[k][j];
+                composition[j][i] += m1[i][k] * m2[k][j];
             }
         }
     };
@@ -214,9 +219,9 @@ SDL_FPoint projVert(std::array<float, 3> vert)
     return proj;
 };
 
-int APIENTRY WinMain(HINSTANCE _instance, HINSTANCE _previnst, PSTR _cmdline, int _cmdshow)
+int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd)
 {
-    std::cout << "Hello World!" << std::endl;
+    std::cout << "Running now" << std::endl;
 
     if (SDL_Init(SDL_INIT_VIDEO) < 0)
     {
