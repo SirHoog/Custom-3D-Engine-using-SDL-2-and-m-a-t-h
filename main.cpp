@@ -1,6 +1,6 @@
 // This is also my first C++ Program (Not kidding)!
 // Big credits to herbglitch#0024 on discord and YT for helping me get to this point
-// Since I used blender, this is Z-up
+// Since I used blender, this is Z-up ( I think )
 // I did have some help from ChatGPT though. BUT IT WAS ONLY USED FOR WRITING CODE QUICKLY
 // To help visualize the object: https://www.geogebra.org/3d?lang=en
 // To help summarize what's happening here: https://www.youtube.com/watch?v=hFRlnNci3Rs
