@@ -186,14 +186,12 @@ void readOBJ(std::string fileName)
     }
 };
 
-void calculateFocalLength(float& focalLength)
+void calculateFocalLength()
 {
     float aspectRatio = screenWidth / screenHeight;
     float horizontalFOV = std::atan(std::tan(verticalFOV / 2) * aspectRatio) * 2;
     
     focalLength = (screenWidth / 2) / std::tan(horizontalFOV / 2);
-
-    focalLength = 50;
 };
 
 // Project vertex
@@ -298,6 +296,8 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
         SDL_SetRenderDrawColor(renderer, 255, 100, 100, 255);
         SDL_RenderClear(renderer);
         
+        calculateFocalLength();
+
         for (int faceI = 0; faceI < faces.size(); faceI++)
         {
             SDL_Vertex verts2D[faces[faceI].size()] = {};
