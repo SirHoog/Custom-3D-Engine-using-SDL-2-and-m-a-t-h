@@ -186,7 +186,7 @@ void readOBJ(std::string fileName)
     }
 };
 
-void calculateFocalLength()
+void calcFocalLength()
 {
     float aspectRatio = screenWidth / screenHeight;
     float horizontalFOV = std::atan(std::tan(verticalFOV / 2) * aspectRatio) * 2;
