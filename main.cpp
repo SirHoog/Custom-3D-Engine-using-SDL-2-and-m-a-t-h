@@ -207,7 +207,7 @@ SDL_FPoint projVert(std::array<float, 3> vert)
         camTransform
     )[0];
 
-    std::cout << std::round(vert[0]) << ' ' << std::round(vert[1]) << ' ' << std::round(vert[2]) << " : " << transformedVert[0] << ' ' << transformedVert[1] << ' ' << transformedVert[2] << std::endl;
+    // std::cout << std::round(vert[0]) << ' ' << std::round(vert[1]) << ' ' << std::round(vert[2]) << " : " << transformedVert[0] << ' ' << transformedVert[1] << ' ' << transformedVert[2] << std::endl;
 
     // Perform projection calculations
     SDL_FPoint proj =
@@ -224,6 +224,17 @@ SDL_FPoint projVert(std::array<float, 3> vert)
     };
 
     return proj;
+};
+
+void printArray(std::vector<std::vector<float>> m)
+{
+    for (int i = 0; i < m.size(); i++)
+    {
+        for (int j = 0; j < m[0].size(); j++)
+        {
+            std::cout << (j == m[0].size()) ? std::to_string(m[i][j]) + ' ' : std::to_string(m[i][j]) + '\n';
+        }
+    }
 };
 
 int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd)
@@ -300,6 +311,7 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
         
         calcFocalLength();
 
+        // For every face
         for (int faceI = 0; faceI < faces.size(); faceI++)
         {
             SDL_Vertex verts2D[faces[faceI].size()] = {};
@@ -322,6 +334,8 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
                 SDL_Vertex vert = {pos, color, {1, 1}};
 
                 verts2D[i] = vert;
+
+                std::cout << pos.x << ' ' << pos.y << std::endl;
             };
 
             SDL_RenderGeometry(renderer, NULL, verts2D, 3, NULL, 0);
