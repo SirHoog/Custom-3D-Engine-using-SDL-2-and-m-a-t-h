@@ -319,19 +319,11 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
             // For each vertex in the face, draw it on the screen
             for (int i = 0; i < faces[faceI].size(); i++)
             {
-                for (int j = 0; j < vertNorms.size(); j++)
-                {
-                    for (int k = 0; k < 3; k++)
-                    {
-                        vertNorms[j][k] *= -1;
-                    }
-                };
-
-                Uint8 v = std::clamp((dotProduct(vertNorms[faceI], lightDir) + 1) / 2 * 255, 0.0f, 255.0f); // v for value = brightness
+                Uint8 v = std::clamp(-(dotProduct(vertNorms[faceI], lightDir)) / * 255, 0.0f, 255.0f); // v for value = brightness
                 SDL_SetRenderDrawColor(renderer, v, v, v, 255);
                 SDL_FPoint pos = projVert(verts[faces[faceI][i]]);
                 SDL_Color color = {v, v, v, 255};
-                SDL_Vertex vert = {pos, color, {1, 1}};
+                SDL_Vertex vert = {pos, color, {0, 0}};
 
                 verts2D[i] = vert;
 
