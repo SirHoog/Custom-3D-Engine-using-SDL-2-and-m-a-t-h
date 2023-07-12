@@ -216,7 +216,7 @@ SDL_FPoint projVert(std::array<float, 3> vert)
         focalLength * transformedVert[1] / transformedVert[2]   // fl * y / z
     };
 
-    // Convert to SDL2 coordinates
+    // Convert to SDL2 coordinates (Starts in the top left and the Y axis is flipped)
     proj =
     {
         proj.x - screenWidth / 2,
