@@ -328,7 +328,7 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
                 std::cout << pos.x << ' ' << pos.y << std::endl;
             };
 
-            SDL_RenderGeometry(renderer, NULL, verts2D, faces[faceI].size(), NULL, 0);
+            SDL_RenderGeometry(renderer, NULL, verts2D, faces[faceI].size(), NULL, 2);
         }
 
         SDL_RenderPresent(renderer);
