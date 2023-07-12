@@ -334,5 +334,7 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
         SDL_RenderPresent(renderer);
     }
 
+    std::cout << "Quit";
+
     return 1;
 }
