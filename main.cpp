@@ -207,17 +207,6 @@ SDL_FPoint projVert(std::array<float, 3> vert)
         std::cos(vert[0]) * (std::cos(vert[1]) * vert[2] + std::sin(vert[1]) * (std::sin(vert[2]) * vert[1] + std::cos(vert[2]) * vert[0])) - std::sin(vert[0]) * (std::cos(vert[2]) * vert[1] - std::sin(vert[2]) * vert[0])
     };
 
-    // std::cout << transformedVert[0] << ' ' << transformedVert[1] << ' ' << transformedVert[2] << std::endl;
-    // Apply the camera transformation to the vertex
-    std::array<float, 3> transformedVert = matrixMult(
-        {
-            {vert[0], 0, 0},
-            {vert[1], 0, 0},
-            {vert[2], 0, 0}
-        },
-        camTransform
-    )[0];
-
     // Perform projection calculations
     // https://wikimedia.org/api/rest_v1/media/math/render/svg/f002d3d4ed5e51f66a9e80bad596258adb82ed25
     SDL_FPoint proj =
@@ -227,19 +216,11 @@ SDL_FPoint projVert(std::array<float, 3> vert)
     };
 
     // Convert to SDL2 coordinates (Starts in the top left and the Y axis is flipped)
-<<<<<<< HEAD
     // proj =
     // {
     //     -(proj.x - screenWidth / 2),
     //     -(proj.y - screenHeight / 2)
     // };
-=======
-    proj =
-    {
-        proj.x - screenWidth / 2,
-        -(proj.y - screenHeight / 2)
-    };
->>>>>>> d0a2a41f2e34a495599c6bd948298086b89fe607
 
     return proj;
 };
@@ -337,11 +318,7 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
             // For each vertex in the face, draw it on the screen
             for (int i = 0; i < faces[faceI].size(); i++)
             {
-<<<<<<< HEAD
                 Uint8 v = std::clamp(-(dotProduct(vertNorms[faceI], lightDir)) / 255, 0.0f, 255.0f); // v for value = brightness
-=======
-                Uint8 v = std::clamp(-(dotProduct(vertNorms[faceI], lightDir)) / * 255, 0.0f, 255.0f); // v for value = brightness
->>>>>>> d0a2a41f2e34a495599c6bd948298086b89fe607
                 SDL_SetRenderDrawColor(renderer, v, v, v, 255);
                 SDL_FPoint pos = projVert(verts[faces[faceI][i]]);
                 SDL_Color color = {v, v, v, 255};
