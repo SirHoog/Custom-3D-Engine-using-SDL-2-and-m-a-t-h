@@ -13,10 +13,10 @@
 #include <array>
 #include <string>
 #include <vector>
-#include <algorithm>
 #include <SDL2/SDL.h>
 #include <windows.h>
 #include <iostream>
+#include <algorithm>
 
 // Desmos example: https://www.desmos.com/calculator/p23yax5qd0
 // https://stackoverflow.com/questions/10002918/what-is-the-need-for-normalizing-a-vector
@@ -64,25 +64,25 @@ std::array<float, 3> crossProduct(std::array<float, 3> a, std::array<float, 3> b
 
 std::vector<std::array<float, 3>> AngleVectorToRotMatrix(std::array<float, 3> vector) // https://wikimedia.org/api/rest_v1/media/math/render/svg/a8e16f4967571b7a572d1a19f3f6468512f9843e
 {
-    float x = 2 * M_PI * (vector[0] / 360);
-    float y = 2 * M_PI * (vector[1] / 360);
-    float z = 2 * M_PI * (vector[2] / 360);
+    float i = 2 * M_PI * (vector[0] / 360);
+    float j = 2 * M_PI * (vector[1] / 360);
+    float k = 2 * M_PI * (vector[2] / 360);
 
     std::vector<std::array<float, 3>> rotMatrix = {
-        {
-            std::cos(z) * std::sin(y) * std::sin(x) - std::sin(z) * std::sin(x),
-            std::sin(z) * std::sin(y) * std::sin(x) - std::cos(z) * std::sin(x),
-            std::cos(y) * std::cos(x)
+        {                                                                       // Roll  <=> i
+            std::cos(k) * std::sin(j) * std::sin(i) - std::sin(k) * std::sin(i),
+            std::sin(k) * std::sin(j) * std::sin(i) - std::cos(k) * std::sin(i),
+            std::cos(j) * std::cos(i)
         },
-        {
-            std::cos(z) * std::sin(y) * std::sin(x) - std::sin(z) * std::cos(x),
-            std::sin(z) * std::sin(y) * std::sin(x) + std::cos(z) * std::cos(x),
-            std::cos(y) * std::sin(x)
+        {                                                                       // Pitch <=> j
+            std::cos(k) * std::sin(j) * std::sin(i) - std::sin(k) * std::cos(i),
+            std::sin(k) * std::sin(j) * std::sin(i) + std::cos(k) * std::cos(i),
+            std::cos(j) * std::sin(i)
         },
-        {
-            std::cos(z) * std::cos(y),
-            std::sin(z) * std::cos(y),
-            -std::sin(y)
+        {                                                                       // Yaw   <=> k
+            std::cos(k) * std::cos(j),
+            std::sin(k) * std::cos(j),
+            -std::sin(j)
         }
     };
 
@@ -120,7 +120,7 @@ std::vector<std::vector<int>> faces; // Indices
 
 // Focal length comparisons: https://cdn-7.nikon-cdn.com/Images/Learn-Explore/Photography-Techniques/2009/Focal-Length/Media/red-barn-sequence.jpg
 // Camera diagram: https://digitaltravelcouple.com/wp-content/uploads/2019/04/what-is-focal-length-1-1024x576.jpg?ezimgfmt=rs:767x431/rscb19/ng:webp/ngcb19
-float focalLength = 50; // Millimeters
+float focalLength = 5;
 
 // Apply rotation then offset
 std::array<float, 3> objRot = {0, 0, 0}; // Degrees
@@ -128,8 +128,6 @@ std::array<float, 3> objOffset = {0, 0, 0};
 
 std::array<float, 3> camRot = {0, 0, 0}; // Orientation
 std::array<float, 3> camPos = {0, 0, 5};
-std::vector<std::array<float, 3>> camTransform = matrixMult(AngleVectorToRotMatrix(camRot), {{1, 0, camPos[0]}, {0, 1, camPos[1]}, {0, 0, camPos[2]}});
-
 std::array<float, 3> lightDir = {0, 1, 1};
 
 int screenWidth = 1800;
@@ -195,38 +193,41 @@ void calcFocalLength()
 };
 
 // Project vertex
+// https://en.wikipedia.org/wiki/3D_projection#Mathematical_formula
 SDL_FPoint projVert(std::array<float, 3> vert)
 {
-    // Apply the camera transformation to the vertex
-    std::array<float, 3> transformedVert = matrixMult(
-        {
-            {vert[0], vert[1], vert[2]},
-            {1, 1, 1},
-            {1, 1, 1}
-        },
-        camTransform
-    )[0];
+    // https://wikimedia.org/api/rest_v1/media/math/render/svg/d6e81e05bfcd4cd41612c318806d4a9e14cf591c
+    std::array<float, 3> tv = // Transformed Vertex
+    {
+        // cos(y) * (sin(z) * y + cos(z) * x) + sin(y) * z
+        std::cos(vert[1]) * (std::sin(vert[2]) * vert[1] + std::cos(vert[2]) * vert[1]) - std::sin(vert[1]) * vert[2],
+        // sin(x) * (cos(y) * z + sin(y) * (sin(z) * y + cos(z) * x)) + cos(x) * (cos(z) * y - sin(z) * x)
+        std::sin(vert[0]) * (std::cos(vert[1]) * vert[2] + std::sin(vert[1]) * (std::sin(vert[2]) * vert[1] + std::cos(vert[2]) * vert[0])) + std::cos(vert[0]) * (std::cos(vert[2]) * vert[1] - std::sin(vert[2]) * vert[0]),
+        // cos(x) * (cos(y) * z + sin(y) * (sin(z) * y + cos(z) * x)) - sin(x) * (cos(z) * y - sin(z) * x)
+        std::cos(vert[0]) * (std::cos(vert[1]) * vert[2] + std::sin(vert[1]) * (std::sin(vert[2]) * vert[1] + std::cos(vert[2]) * vert[0])) - std::sin(vert[0]) * (std::cos(vert[2]) * vert[1] - std::sin(vert[2]) * vert[0])
+    };
 
-    // std::cout << std::round(vert[0]) << ' ' << std::round(vert[1]) << ' ' << std::round(vert[2]) << " : " << transformedVert[0] << ' ' << transformedVert[1] << ' ' << transformedVert[2] << std::endl;
+    // std::cout << transformedVert[0] << ' ' << transformedVert[1] << ' ' << transformedVert[2] << std::endl;
 
     // Perform projection calculations
+    // https://wikimedia.org/api/rest_v1/media/math/render/svg/f002d3d4ed5e51f66a9e80bad596258adb82ed25
     SDL_FPoint proj =
     {
-        focalLength * transformedVert[0] / transformedVert[2], // fl * x / z
-        focalLength * transformedVert[1] / transformedVert[2]   // fl * y / z
+        focalLength / tv[2] * tv[0] - screenWidth / 2,
+        focalLength / tv[2] * tv[1] - screenHeight / 2
     };
 
-    // Convert to SDL2 coordinates
-    proj =
-    {
-        (proj.x + screenWidth / 2) / screenWidth,
-        1 - (proj.y + screenHeight / 2) / screenHeight
-    };
+    // Convert to SDL2 coordinates (Starts in the top left and the Y axis is flipped)
+    // proj =
+    // {
+    //     -(proj.x - screenWidth / 2),
+    //     -(proj.y - screenHeight / 2)
+    // };
 
     return proj;
 };
 
-void printArray(std::vector<std::vector<float>> m)
+void printMatrix(std::vector<std::vector<float>> m)
 {
     for (int i = 0; i < m.size(); i++)
     {
@@ -269,7 +270,7 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
     bool running = true;
 
     readOBJ("C:\\Users\\defga\\OneDrive\\Documents\\3D_Engine_Project\\TestObject2.obj");
-    
+
     verts = matrixMult(verts, AngleVectorToRotMatrix(objRot));
     vertNorms = matrixMult(vertNorms, AngleVectorToRotMatrix(objRot));
 
@@ -319,30 +320,25 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
             // For each vertex in the face, draw it on the screen
             for (int i = 0; i < faces[faceI].size(); i++)
             {
-                for (int j = 0; j < vertNorms.size(); j++)
-                {
-                    for (int k = 0; k < 3; k++)
-                    {
-                        vertNorms[j][k] *= -1;
-                    }
-                };
-
-                Uint8 v = std::clamp((dotProduct(vertNorms[faceI], lightDir) + 1) / 2 * 255, 0.0f, 255.0f); // v for value = brightness
+                Uint8 v = std::clamp(-(dotProduct(vertNorms[faceI], lightDir)) / 255, 0.0f, 255.0f); // v for value = brightness
                 SDL_SetRenderDrawColor(renderer, v, v, v, 255);
                 SDL_FPoint pos = projVert(verts[faces[faceI][i]]);
                 SDL_Color color = {v, v, v, 255};
-                SDL_Vertex vert = {pos, color, {1, 1}};
+                SDL_Vertex vert = {pos, color, {0, 0}};
 
                 verts2D[i] = vert;
 
                 std::cout << pos.x << ' ' << pos.y << std::endl;
+                // std::cout << camTransform[0][0] << ' ' << camTransform[0][1] << ' ' << camTransform[0][2] << std::endl;
             };
 
-            SDL_RenderGeometry(renderer, NULL, verts2D, 3, NULL, 0);
+            SDL_RenderGeometry(renderer, NULL, verts2D, faces[faceI].size(), NULL, 2);
         }
 
         SDL_RenderPresent(renderer);
     }
+
+    std::cout << "Quit";
 
     return 1;
 }
