@@ -196,7 +196,6 @@ void calcFocalLength()
 // https://en.wikipedia.org/wiki/3D_projection#Mathematical_formula
 SDL_FPoint projVert(std::array<float, 3> vert)
 {
-<<<<<<< HEAD
     // https://wikimedia.org/api/rest_v1/media/math/render/svg/d6e81e05bfcd4cd41612c318806d4a9e14cf591c
     std::array<float, 3> tv = // Transformed Vertex
     {
@@ -209,8 +208,6 @@ SDL_FPoint projVert(std::array<float, 3> vert)
     };
 
     // std::cout << transformedVert[0] << ' ' << transformedVert[1] << ' ' << transformedVert[2] << std::endl;
-
-=======
     // Apply the camera transformation to the vertex
     std::array<float, 3> transformedVert = matrixMult(
         {
@@ -221,7 +218,6 @@ SDL_FPoint projVert(std::array<float, 3> vert)
         camTransform
     )[0];
 
->>>>>>> d0a2a41f2e34a495599c6bd948298086b89fe607
     // Perform projection calculations
     // https://wikimedia.org/api/rest_v1/media/math/render/svg/f002d3d4ed5e51f66a9e80bad596258adb82ed25
     SDL_FPoint proj =
